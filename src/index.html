@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tugas Penundaan Imbalan</title>
+<style>
+:root{--ink:#1B1340;--bg:#E6DEFF;--lemon:#FFD23F;--mute:#4A4270}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+main{max-width:680px;margin:0 auto;padding:18px 14px 56px}
+.panel{background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:7px 7px 0 var(--ink);padding:22px}
+h1{font-size:1.65rem;line-height:1.2;margin:0 0 12px;font-weight:900}
+h2{font-size:1.15rem;margin:24px 0 8px;font-weight:900}
+p{margin:0 0 12px;max-width:62ch}
+.mute{color:var(--mute);font-size:.92rem}
+button{font:inherit;font-weight:900;color:var(--ink);background:var(--lemon);border:3px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);padding:12px 24px;min-height:50px;cursor:pointer}
+button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+button.alt{background:#fff}
+button.take{width:100%;min-height:80px;font-size:1.7rem}
+button:disabled{opacity:.5}
+:focus-visible{outline:4px solid #6C4BFF;outline-offset:3px}
+.top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:800;font-size:.95rem}
+.bar{height:10px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;margin:8px 0 0}
+.bar i{display:block;height:100%;background:var(--ink)}
+.ball{width:min(300px,72vw);display:block;margin:6px auto}
+.row{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
+.row>div{flex:1 1 240px;border:3px solid var(--ink);border-radius:12px;padding:14px}
+.row svg{width:70px;float:right;margin-left:8px}
+.row h3{margin:0 0 6px;font-size:1.1rem}
+.row ul{margin:0;padding-left:18px}
+.pr{display:grid;grid-template-columns:70px 1fr 44px;align-items:center;gap:8px;margin:6px 0;font-weight:800}
+.pr i{display:block;height:18px;border:2px solid var(--ink);background:var(--lemon);border-radius:4px}
+.nav{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+svg.ch{width:100%;height:auto}
+.leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.88rem;color:var(--mute)}
+.leg b{display:inline-block;width:14px;height:5px;margin-right:6px;vertical-align:middle}
+li{margin-bottom:6px}
+body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tbl{border-collapse:collapse;width:100%;font-size:.92rem;margin:8px 0 14px}
+.tbl th,.tbl td{border:2px solid var(--ink);padding:6px 8px;text-align:left;vertical-align:top}
+.refs{padding-left:22px;font-size:.9rem}
+.hero{border:3px solid var(--ink);background:var(--lemon);border-radius:14px;padding:14px 18px;margin:14px 0;break-inside:avoid}
+.hl{font-weight:900}
+.hn{font-size:4.2rem;font-weight:900;line-height:1.05}
+.refs li{margin-bottom:8px;overflow-wrap:anywhere}
+fieldset.lk{border:3px solid var(--ink);border-radius:12px;margin:0 0 12px;padding:10px 14px 12px;min-width:0}
+fieldset.lk.err{background:#FFE3E8;border-color:#A3122D}
+.lk legend{font-weight:800;padding:0 6px;max-width:100%}
+.opts{display:flex;gap:8px;margin-top:6px}
+.opts label{flex:1;position:relative;display:block}
+.opts input,.pill input{position:absolute;opacity:0;width:1px;height:1px}
+.opts span{display:block;text-align:center;border:3px solid var(--ink);border-radius:10px;padding:8px 0;font-weight:900;cursor:pointer;background:#fff;min-height:46px}
+.opts input:checked+span,.pill input:checked+span{background:var(--lemon);box-shadow:3px 3px 0 var(--ink)}
+.opts input:focus-visible+span,.pill input:focus-visible+span{outline:4px solid #6C4BFF;outline-offset:2px}
+.ends{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;color:var(--mute);margin-top:6px}
+.fld{margin:0 0 18px}
+.fld .t{display:block;font-weight:800;margin-bottom:6px}
+.inp{font:inherit;border:3px solid var(--ink);border-radius:10px;padding:10px 12px;min-height:48px;width:100%;background:#fff;color:var(--ink)}
+.pills{display:flex;flex-direction:column;gap:8px}
+.pill{position:relative;display:block}
+.pill span{display:block;border:3px solid var(--ink);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;background:#fff}
+.errm{color:#A3122D;font-weight:800;min-height:1.4em;margin:8px 0 0}
+.story{font-size:1.25rem;line-height:1.65;max-width:34em}
+h1+.story{margin-top:4px}
+.st{display:flex;gap:12px;align-items:center;margin:0 0 14px}
+.st .n{flex:none;width:38px;height:38px;border:3px solid var(--ink);border-radius:50%;background:var(--lemon);font-weight:900;display:flex;align-items:center;justify-content:center}
+.st p{margin:0}
+.breath{width:150px;height:150px;border-radius:50%;background:var(--lemon);border:3px solid var(--ink);margin:20px auto;animation:br 8s ease-in-out infinite}
+@keyframes br{0%,100%{transform:scale(.6)}50%{transform:scale(1)}}
+.viz{display:block;width:100%;max-width:440px;margin:4px auto 14px}
+.shk,.swg,.pls{transform-box:fill-box;transform-origin:center}
+.shk{animation:shk 2.4s infinite}
+@keyframes shk{0%,55%,100%{transform:rotate(0)}60%,70%,80%{transform:rotate(-6deg)}65%,75%,85%{transform:rotate(6deg)}}
+.swg{transform-origin:50% 0;animation:swg 3s ease-in-out infinite}
+@keyframes swg{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.pls{animation:pls 1.6s ease-in-out infinite}
+@keyframes pls{50%{transform:scale(1.14)}}
+.drw{stroke-dasharray:1;stroke-dashoffset:1;animation:drw 2.4s ease forwards}
+@keyframes drw{to{stroke-dashoffset:0}}
+.devbtn{position:fixed;left:10px;bottom:10px;z-index:40;min-height:32px;padding:2px 10px;font-size:.78rem;box-shadow:2px 2px 0 var(--ink);opacity:.45}
+.devbtn:hover,.devbtn:focus-visible{opacity:1}
+.ov{position:fixed;inset:0;z-index:60;background:rgba(27,19,64,.65);display:flex;align-items:center;justify-content:center;padding:16px}
+.ov .panel{width:100%;max-width:380px}
+#dev{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--ink);color:#fff;border-top:4px solid var(--lemon);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));font-size:.85rem}
+#dev .dr{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;max-width:760px;margin:0 auto 6px}
+#dev .dr:last-child{margin-bottom:0}
+#dev button{min-height:38px;padding:4px 12px;font-size:.85rem;border-width:2px;box-shadow:2px 2px 0 #000}
+#dev select{font:inherit;font-size:.85rem;min-height:38px;border:2px solid #fff;border-radius:10px;background:#fff;color:var(--ink);padding:0 6px;max-width:100%}
+#dev .tag{background:var(--lemon);color:var(--ink);font-weight:900;border-radius:6px;padding:2px 8px}
+#dev label{display:flex;align-items:center;gap:5px;font-weight:700}
+body.dev main{padding-bottom:150px}
+@media (prefers-reduced-motion:reduce){.viz *{animation:none!important;stroke-dashoffset:0!important}}
+@media (prefers-reduced-motion:reduce){.breath{animation:none}}
+@media print{
+body{background:#fff;font-size:11.5pt}
+main{max-width:none;padding:0}
+.panel{border:0;box-shadow:none;padding:0}
+.noprint{display:none!important}
+h2{break-after:avoid}
+svg.ch,.tbl,.refs li{break-inside:avoid}
+@page{margin:16mm}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const ENDPOINT="https://script.google.com/macros/s/AKfycbwfHmtQcLdjITZJDoh0FJse295slpA-tRYuVWySKB9QB-Fgubdy-nGhtsaMs6-aZIA3tg/exec";
+const ST=[
+ {n:"Hijau",c:"#12A87A",v0:1,g:0.5,hs:[0.05,0.09,0.14],sh:"circle",tk:450},
+ {n:"Merah",c:"#F2456E",v0:2,g:1,hs:[0.18,0.27,0.38],sh:"star",tk:350}];
+const GRACE=1,EPS=0.08,PER=50,EXTRA=5,PRIOR=[1/3,1/3,1/3],INK="#1B1340";
+const REG=["tenang","sedang","ganas"],REGE=["calm","medium","wild"];
+let SID="",STAMP="",PID="",SENT="",SENDING=null,DEV=false,TURBO=false,SAMPLE=false,NT;
+function pid(){const e=document.getElementById("pid");return ((e&&e.value)||PID).trim().replace(/[",\r\n]/g," ").replace(/^[=+\-@]/,"'$&")}
+function dl(name,H,R){
+  if(SENDING){SENDING[name.indexOf("rounds")>-1?"rounds":"summary"]={H:H,R:R};return}
+  const txt="\ufeff"+[H].concat(R).map(r=>r.join(",")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"}));a.download=name;document.body.appendChild(a);a.click();a.remove();
+}
+const dv=x=>({wt:sec(x.n,x.s),bg:sec(x.Tb-x.Tt,x.s),cg:sec(x.n-x.Tb,x.s),a:ev(x.s,x.n,x.h),r:ev(x.s,x.Tb,x.h),t:ev(x.s,x.Tt,x.h),auto:!x.burst&&x.n>=capT(x.s)+EXTRA});
+function Phi(x){const z=Math.abs(x)/Math.SQRT2,t=1/(1+0.3275911*z),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-z*z);return x>=0?0.5*(1+y):0.5*(1-y)}
+const GD=[],GS=[];for(let d=-6;d<=6.001;d+=.25)GD.push(d);for(let q=.25;q<=6.001;q+=.25)GS.push(q);
+function fitCens(L){
+  const rows=L.map(x=>({m:x.Tb,n:x.n,c:x.burst||x.n>=capT(x.s)+EXTRA}));
+  let best=-Infinity,bd=0,bs=1;
+  for(const d of GD)for(const q of GS){
+    let ll=0;
+    for(const r of rows){const mu=r.m+d;let p;
+      if(r.c)p=1-Phi((r.n-.5-mu)/q);
+      else p=Phi((r.n+.5-mu)/q)-(r.n===0?0:Phi((r.n-.5-mu)/q));
+      ll+=Math.log(Math.max(p,1e-12))}
+    if(ll>best){best=ll;bd=d;bs=q}
+  }
+  return [bd,bs];
+}
+function lossScore(L,d,q){
+  let a=0,b=0;
+  L.forEach(x=>{const K=capT(x.s)+EXTRA,e=[];for(let T=0;T<=K;T++)e.push(ev(x.s,T,x.h));
+    let ex=0,prev=0;for(let T=0;T<=K;T++){const c=T===K?1:Phi((T+.5-(x.Tb+d))/q);ex+=(c-prev)*e[T];prev=c}
+    const ref=e[Math.min(x.Tb,K)];a+=ref-ex;b+=ref-e.reduce((u,v)=>u+v,0)/e.length});
+  return b>1e-9?1-a/b:0;
+}
+function skill(L){if(L.length<5)return{d:0,sg:1,sc:0};const f=fitCens(L);return{d:f[0],sg:f[1],sc:lossScore(L,f[0],f[1])}}
+function csv(){
+  const H=["session_id","participant_id","timestamp","language","round","block","store","true_mood","pop_chance","tick_ms","take_tick","popped","auto_taken","points","wait_sec","rational_ideal_sec","true_ideal_sec","belief_gap_sec","control_gap_sec","ev_actual","ev_rational","ev_true_ideal","entropy_bits","mood_match","rational_ideal_tick","true_ideal_tick"];
+  const R=log.map((x,i)=>{const d=dv(x),b=x.burst;return [SID,pid(),STAMP,LG,i+1,Math.floor(i/PER)+1,x.s?"red":"green",REGE[x.reg],x.h,ST[x.s].tk,x.n,b?1:0,d.auto?1:0,x.pts,b?"":d.wt.toFixed(3),sec(x.Tb,x.s).toFixed(3),sec(x.Tt,x.s).toFixed(3),d.bg.toFixed(3),b?"":d.cg.toFixed(3),b?"":d.a.toFixed(4),d.r.toFixed(4),d.t.toFixed(4),x.H.toFixed(4),x.ok?1:0,x.Tb,x.Tt]});
+  dl("tugas-imbalan-rounds-"+SID+".csv",H,R);
+}
+function csvSum(){
+  const T=L=>L.filter(x=>!x.burst),m=(a,f)=>a.length?+mean(a.map(f)).toFixed(4):"";
+  const MET=[["mean_points",L=>m(L,x=>x.pts)],["pop_rate",L=>m(L,x=>x.burst?1:0)],["mean_wait_sec",L=>m(T(L),x=>dv(x).wt)],["belief_gap_sec",L=>m(L,x=>dv(x).bg)],["control_gap_sec",L=>m(T(L),x=>dv(x).cg)],["control_gap_abs_sec",L=>m(T(L),x=>Math.abs(dv(x).cg))],["regret_belief",L=>m(T(L),x=>{const d=dv(x);return d.t-d.r})],["regret_control",L=>m(T(L),x=>{const d=dv(x);return d.r-d.a})],["regret_total",L=>m(T(L),x=>{const d=dv(x);return d.t-d.a})]];
+  const SUB=[["",()=>true],["_green",x=>x.s===0],["_red",x=>x.s===1],["_calm",x=>x.reg===0],["_medium",x=>x.reg===1],["_wild",x=>x.reg===2],["_odd",(x,i)=>i%2===0],["_even",(x,i)=>i%2===1]];
+  const tk=T(log),tot=log.reduce((a,x)=>a+x.pts,0),rate=f=>tk.length?+(tk.filter(f).length/tk.length).toFixed(4):"";
+  const H=["session_id","participant_id","timestamp","language","n_rounds","total_points","n_popped","n_auto_taken","mood_match_rate","mean_entropy_bits","early_take_rate","late_take_rate","ontarget_rate","points_efficiency"];
+  const V=[SID,pid(),STAMP,LG,log.length,tot,log.length-tk.length,tk.filter(x=>dv(x).auto).length,m(log,x=>x.ok?1:0),m(log,x=>x.H),rate(x=>x.n<x.Tb),rate(x=>x.n>x.Tb),rate(x=>x.n===x.Tb),+(tot/log.reduce((a,x)=>a+dv(x).t,0)).toFixed(4)];
+  const K=skill(log),Ko=skill(log.filter((x,i)=>i%2===0)),Ke=skill(log.filter((x,i)=>i%2===1)),ms=mean(log.map(x=>ST[x.s].tk))/1000,r4=v=>+v.toFixed(4);
+  H.push("control_skill","delta_ticks","sigma_ticks","delta_sec","sigma_sec","control_skill_odd","control_skill_even");V.push(r4(K.sc),K.d,K.sg,r4(K.d*ms),r4(K.sg*ms),r4(Ko.sc),r4(Ke.sc));
+  SUB.forEach(([sf,f])=>{const L=log.filter(f);MET.forEach(([n,g])=>{H.push(n+sf);V.push(g(L))})});
+  const bsSc=BS.map((x,i)=>x?(BS_REV[i]?6-x:x):0),bsTot=bsSc.reduce((a,b)=>a+b,0);
+  BS.forEach((x,i)=>{H.push("bscs"+(i+1));V.push(x||"")});
+  H.push("bscs_total","bscs_mean","sex","age","education_code","education","employment");
+  V.push(bsTot,+(bsTot/13).toFixed(4),DEMO.sex,DEMO.age,DEMO.edu,DEMO.edu?EDU_EN[DEMO.edu-1]:"",DEMO.job);
+  dl("tugas-imbalan-summary-"+SID+".csv",H,[V]);
+}
+function autoSend(){
+  if(DEV){const c=document.getElementById("cm");if(c)c.textContent="Mode developer: data tidak dikirim ke peneliti.";return}
+  if(!ENDPOINT||SENT===SID)return;
+  SENT=SID;SENDING={};
+  try{csv();csvSum()}catch(e){}
+  const body=SENDING;SENDING=null;body.session_id=SID;body.participant_id=pid();
+  const say=m=>{const c=document.getElementById("cm");if(c)c.textContent=m};
+  say(t("Mengirim data ke peneliti...","Sending data to the researcher..."));
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
+   .then(()=>say(t("Data sudah dikirim ke peneliti. Terima kasih!","Data sent to the researcher. Thank you!")))
+   .catch(()=>{SENT="";say(t("Gagal mengirim. Unduh kedua CSV lalu kirim manual ke peneliti.","Sending failed. Download both CSVs and send them to the researcher manually."))});
+}
+function IDB(l){return ENDPOINT?'<p class="mute">'+(l?"At the end of the session your round data is sent automatically to the researcher.":"Di akhir sesi, data putaranmu dikirim otomatis ke peneliti.")+"</p>":""}
+const REFS=[
+"Adams, R. P., & MacKay, D. J. C. (2007). Bayesian online changepoint detection. arXiv. https://doi.org/10.48550/arXiv.0710.3742",
+"Arifin, H. H., & Milla, M. N. (2020). Adaptasi dan properti psikometrik skala kontrol diri ringkas versi Indonesia. Jurnal Psikologi Sosial, 18(2), 179–195. https://doi.org/10.7454/jps.2020.18",
+"Bayes, T. (1763). An essay towards solving a problem in the doctrine of chances. Philosophical Transactions of the Royal Society of London, 53, 370–418. https://doi.org/10.1098/rstl.1763.0053",
+"Behrens, T. E. J., Woolrich, M. W., Walton, M. E., & Rushworth, M. F. S. (2007). Learning the value of information in an uncertain world. Nature Neuroscience, 10(9), 1214–1221. https://doi.org/10.1038/nn1954",
+"Duckworth, A. L., & Kern, M. L. (2011). A meta-analysis of the convergent validity of self-control measures. Journal of Research in Personality, 45(3), 259–268. https://doi.org/10.1016/j.jrp.2011.02.004",
+"Enkavi, A. Z., Eisenberg, I. W., Bissett, P. G., Mazza, G. L., MacKinnon, D. P., Marsch, L. A., & Poldrack, R. A. (2019). Large-scale analysis of test–retest reliabilities of self-regulation measures. Proceedings of the National Academy of Sciences, 116(12), 5472–5477. https://doi.org/10.1073/pnas.1818430116",
+"Kidd, C., Palmeri, H., & Aslin, R. N. (2013). Rational snacking: Young children’s decision-making on the marshmallow task is moderated by beliefs about environmental reliability. Cognition, 126(1), 109–114. https://doi.org/10.1016/j.cognition.2012.08.004",
+"Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey, S. E., Stuart, G. L., Strong, D. R., & Brown, R. A. (2002). Evaluation of a behavioral measure of risk taking: The Reward Analogue Risk Task (BART). Journal of Experimental Psychology: Applied, 8(2), 75–84. https://doi.org/10.1037/1076-898X.8.2.75",
+"McGuire, J. T., & Kable, J. W. (2013). Rational temporal predictions can underlie apparent failures to delay gratification. Psychological Review, 120(2), 395–410. https://doi.org/10.1037/a0031910",
+"Mischel, W., Ebbesen, E. B., & Zeiss, A. R. (1972). Cognitive and attentional mechanisms in delay of gratification. Journal of Personality and Social Psychology, 21(2), 204–218. https://doi.org/10.1037/h0032198",
+"Shannon, C. E. (1948). A mathematical theory of communication. Bell System Technical Journal, 27(3), 379–423. https://doi.org/10.1002/j.1538-7305.1948.tb01338.x",
+"Tangney, J., Baumeister, R., & Boone, A. (2004). High self-control predicts good adjustment, less pathology, better grades, and interpersonal success. Journal of Personality, 72, 271–324. https://doi.org/10.1111/j.0022-3506.2004.00263.x",
+"Tobin, J. (1958). Estimation of relationships for limited dependent variables. Econometrica, 26(1), 24–36. https://doi.org/10.2307/1907382"];
+const app=document.getElementById("app");
+const val=(s,n)=>Math.min(10,ST[s].v0+ST[s].g*n);
+const capT=s=>Math.ceil((10-ST[s].v0)/ST[s].g);
+const ev=(s,T,h)=>Math.pow(1-h,Math.max(0,T-GRACE))*val(s,T);
+function bestT(s,w){let b=0,bv=-1;for(let T=0;T<=capT(s);T++){let v=0;ST[s].hs.forEach((h,i)=>v+=w[i]*ev(s,T,h));if(v>bv+1e-9){bv=v;b=T}}return b}
+const trans=b=>b.map(x=>x*(1-EPS)+(1-x)*EPS/2);
+function upd(b,s,n,burst){
+  const m=Math.max(0,n-GRACE),q=b.map((x,i)=>{const h=ST[s].hs[i];return x*(burst?h*Math.pow(1-h,m-1):Math.pow(1-h,m))});
+  const z=q.reduce((a,c)=>a+c,0);return q.map(x=>x/z);
+}
+const ent=b=>-b.reduce((a,x)=>a+(x>0?x*Math.log2(x):0),0);
+const am=b=>b.indexOf(Math.max(...b));
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const sec=(t,s)=>t*ST[s].tk/1000;
+const f1=x=>x.toFixed(1).replace(".",",");
+const fmt=v=>Number.isInteger(v)?String(v):f1(v);
+const pct=x=>Math.round(x*100)+"%";
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+let plan,bi,rd,log,score,timer,cur,belief,reg,slide=0;
+let LG="id",VIEW,GO_AT=0;const t=(a,b)=>LG==="id"?a:b;
+function show(html,tog){app.innerHTML='<div class="panel">'+(tog?'<div class="noprint" style="text-align:right"><button class="alt" id="lg" style="min-height:34px;padding:2px 12px;box-shadow:2px 2px 0 var(--ink)">'+(LG==="id"?"English":"Indonesia")+'</button></div>':"")+html+"</div>";
+  if(tog)document.getElementById("lg").onclick=()=>{LG=LG==="id"?"en":"id";VIEW()};if(DEV)devSync()}
+
+function shape(s,v,bust){
+  const r=26+5.2*v,c=ST[s].c,fill=bust?"#fff":c,dash=bust?' stroke-dasharray="9 8"':"";
+  let g;
+  if(ST[s].sh==="circle")g='<circle cx="100" cy="100" r="'+r+'" fill="'+fill+'" stroke="'+INK+'" stroke-width="5"'+dash+"/>";
+  else{const p=[];for(let i=0;i<24;i++){const a=Math.PI*i/12-Math.PI/2,q=i%2?r*0.72:r;p.push((100+q*Math.cos(a)).toFixed(1)+","+(100+q*Math.sin(a)).toFixed(1))}
+    g='<polygon points="'+p.join(" ")+'" fill="'+fill+'" stroke="'+INK+'" stroke-width="5" stroke-linejoin="round"'+dash+"/>"}
+  return g+'<text x="100" y="116" text-anchor="middle" font-size="46" font-weight="900" fill="'+(bust?"#A3122D":INK)+'">'+fmt(bust?0:v)+"</text>";
+}
+function mini(s){return '<svg viewBox="0 0 200 200" aria-hidden="true">'+shape(s,6,false).replace(/<text.*<\/text>/,"")+"</svg>"}
+
+let hs=0;
+const VS='stroke="#1B1340" stroke-width="4"';
+const vz=(h,l)=>'<svg class="viz" viewBox="0 0 420 '+h+'" role="img" aria-label="'+l+'" font-family="Trebuchet MS,Segoe UI,sans-serif" font-weight="800">';
+const VZ=[
+()=>vz(180,t("Jam 23.40, tugas baru separuh jadi, HP bergetar","11:40 p.m., assignment half done, phone buzzing"))+
+'<circle cx="70" cy="80" r="50" fill="#fff" '+VS+'/><line x1="70" y1="80" x2="65" y2="51" '+VS+' stroke-linecap="round"/><line x1="70" y1="80" x2="34" y2="101" '+VS+' stroke-linecap="round"/><circle cx="70" cy="80" r="5" fill="#1B1340"/><text x="70" y="158" text-anchor="middle" font-size="22" fill="#1B1340">'+t("23.40","11:40 pm")+'</text>'+
+'<rect x="140" y="46" width="130" height="76" rx="10" fill="#fff" '+VS+'/><text x="205" y="72" text-anchor="middle" font-size="15" fill="#1B1340">'+t("Tugas","Assignment")+'</text><rect x="154" y="84" width="102" height="16" rx="5" fill="#fff" '+VS+' stroke-width="3"/><rect x="156" y="86" width="49" height="12" rx="3" fill="#FFD23F"/><text x="205" y="116" text-anchor="middle" font-size="12" fill="#A3122D">'+t("50% · besok pagi!","50% · due tomorrow!")+'</text>'+
+'<g class="shk"><rect x="310" y="22" width="76" height="132" rx="14" fill="#1B1340"/><rect x="318" y="36" width="60" height="104" rx="6" fill="#fff"/><circle cx="348" cy="78" r="16" fill="#F2456E" stroke="#1B1340" stroke-width="3"/><path d="M343 70L357 78L343 86Z" fill="#fff"/><text x="348" y="118" text-anchor="middle" font-size="10" fill="#1B1340">'+t("lucu banget!","so funny!")+'</text></g>'+
+'<path d="M298 50l-10-8M296 88h-12M298 126l-10 8" '+VS+' stroke-width="3" stroke-linecap="round" fill="none"/></svg>',
+()=>vz(185,t("Sepatu diskon hari ini saja, tapi uangnya tabungan","Shoes on sale today only, but the money is savings"))+
+'<g class="swg"><path d="M60 6V28" '+VS+' stroke-width="3" fill="none"/><path d="M30 28h60l8 22-8 22H30l-8-22z" fill="#FFD23F" '+VS+' stroke-linejoin="round"/><text x="60" y="49" text-anchor="middle" font-size="15" fill="#1B1340">SALE</text><text x="60" y="63" text-anchor="middle" font-size="9" fill="#1B1340">'+t("hari ini saja","today only")+'</text></g>'+
+'<path d="M40 150v-34q26 0 36-22l14 8q18 22 52 26q20 4 20 22z" fill="#F2456E" '+VS+' stroke-linejoin="round"/><rect x="40" y="148" width="132" height="10" rx="5" fill="#fff" '+VS+' stroke-width="3"/>'+
+'<circle cx="228" cy="100" r="22" fill="#fff" '+VS+'/><text x="228" y="111" text-anchor="middle" font-size="30" fill="#1B1340">?</text>'+
+'<rect x="300" y="72" width="80" height="88" rx="14" fill="#fff" '+VS+'/><rect x="294" y="58" width="92" height="16" rx="5" fill="#FFD23F" '+VS+' stroke-width="3"/>'+
+[[320,146],[340,146],[360,146],[330,126],[350,126],[340,106]].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="10" fill="#FFD23F" stroke="#1B1340" stroke-width="3"/>').join("")+
+'<text x="340" y="180" text-anchor="middle" font-size="14" fill="#1B1340">'+t("Tabungan","Savings")+'</text></svg>',
+()=>vz(175,t("Imbalan terus membesar: menunggu bisa berbuah atau hangus","The reward keeps growing: waiting can pay off or expire"))+
+'<path d="M54 95h31M125 95h29M208 95L252 55M208 95L252 135" '+VS+' stroke-width="3" fill="none" stroke-linecap="round"/>'+
+[[40,14,1],[105,20,3]].map(b=>'<circle cx="'+b[0]+'" cy="95" r="'+b[1]+'" fill="#12A87A" stroke="#1B1340" stroke-width="3"/><text x="'+b[0]+'" y="101" text-anchor="middle" font-size="16" fill="#1B1340">'+b[2]+'</text>').join("")+
+'<circle class="pls" cx="180" cy="95" r="26" fill="#12A87A" '+VS+'/><text x="180" y="102" text-anchor="middle" font-size="20" fill="#1B1340">5</text>'+
+'<text x="180" y="150" text-anchor="middle" font-size="13" fill="#1B1340">'+t("Ambil sekarang?","Take it now?")+'</text>'+
+'<circle cx="300" cy="46" r="32" fill="#12A87A" '+VS+'/><text x="300" y="56" text-anchor="middle" font-size="28" fill="#1B1340">10</text><text x="342" y="50" font-size="13" fill="#1B1340">'+t("berbuah","pays off")+'</text>'+
+'<circle cx="290" cy="138" r="26" fill="#fff" stroke="#A3122D" stroke-width="4" stroke-dasharray="8 6"/><text x="290" y="147" text-anchor="middle" font-size="24" fill="#A3122D">0</text><text x="326" y="143" font-size="13" fill="#A3122D">'+t("hangus","expires")+'</text></svg>',
+()=>vz(190,t("Grafik nilai naik: hijau pelan dan aman, merah cepat tapi bisa hangus","Value chart: green is slow and safe, red is fast but can expire"))+
+'<path d="M40 12V160H404" fill="none" '+VS+' stroke-width="3"/><text x="34" y="26" text-anchor="end" font-size="12" fill="#4A4270">10</text><text x="400" y="182" text-anchor="end" font-size="12" fill="#4A4270">'+t("waktu","time")+'</text>'+
+'<path class="drw" pathLength="1" d="M40 146L400 20" fill="none" stroke="#12A87A" stroke-width="5" stroke-linecap="round"/><text x="396" y="52" text-anchor="end" font-size="14" fill="#0B7A58">'+t("Hijau","Green")+'</text>'+
+'<path class="drw" pathLength="1" d="M40 132L160 48" fill="none" stroke="#F2456E" stroke-width="5" stroke-linecap="round"/><path d="M150 38l20 20M170 38l-20 20" stroke="#A3122D" stroke-width="5" stroke-linecap="round"/><path d="M160 66V160" stroke="#A3122D" stroke-width="3" stroke-dasharray="5 5"/><text x="160" y="28" text-anchor="middle" font-size="14" fill="#C41E4A">'+t("Merah","Red")+'</text><text x="160" y="178" text-anchor="middle" font-size="12" fill="#A3122D">'+t("hangus","expired")+'</text>'+
+'<circle class="pls" cx="240" cy="76" r="9" fill="#FFD23F" stroke="#1B1340" stroke-width="3"/><text x="240" y="56" text-anchor="middle" font-size="14" fill="#1B1340">'+t("Ambil!","Take!")+'</text></svg>'];
+const HK=()=>[
+t('<h1>Jam 23.40.</h1><p class="story">Tugas dikumpul besok pagi, dan baru separuh jadi. Lalu HP-mu bergetar: ada video yang katanya lucu banget.</p><p class="story">Kamu tahu seharusnya lanjut mengerjakan. Tapi satu video saja, kan? Sebentar doang.</p>',
+'<h1>11:40 p.m.</h1><p class="story">The assignment is due tomorrow morning, and it is only half done. Then your phone buzzes: a video everyone says is hilarious.</p><p class="story">You know you should keep working. But just one video, right? Only a minute.</p>'),
+t('<h1>Atau yang ini.</h1><p class="story">Sepatu incaranmu diskon, dan tinggal hari ini. Uangnya sebenarnya sedang kamu tabung untuk hal lain.</p><p class="story">Nenekmu pernah bilang, “Sabar, nanti ada rezekinya.” Tapi sabar sampai kapan? Dan bagaimana kalau yang ditunggu tidak pernah datang?</p>',
+'<h1>Or this one.</h1><p class="story">The shoes you have wanted are on sale, today only. The money is actually your savings for something else.</p><p class="story">Your grandmother once told you, “Be patient, good things will come.” But patient until when? And what if what you are waiting for never comes?</p>'),
+t('<h1>Di situ ada pertanyaan kecil.</h1><p class="story">Menunggu ini masih sepadan, atau saatnya ambil sekarang?</p><p class="story">Kadang menunggu memang berbuah. Kadang yang ditunggu hangus begitu saja. Dan kita jarang tahu yang mana.</p><p class="story">Orang yang terlihat “tidak sabaran” mungkin hanya sedang membaca situasi dengan cara berbeda. Itu yang ingin dipahami penelitian ini: bukan siapa yang lemah atau kuat, tapi bagaimana kita memutuskan kapan berhenti menunggu.</p>',
+'<h1>There is a small question in there.</h1><p class="story">Is waiting still worth it, or is it time to take it now?</p><p class="story">Sometimes waiting pays off. Sometimes what you waited for simply expires. And we rarely know which.</p><p class="story">Someone who looks “impatient” may just be reading the situation differently. That is what this study wants to understand: not who is weak or strong, but how we decide when to stop waiting.</p>'),
+t('<h1>Tugas Penundaan Imbalan</h1><p class="story">Versi mini dari momen-momen tadi, dipadatkan jadi sekitar 15 menit. Tidak ada jawaban benar atau salah. Kamu hanya memutuskan kapan berhenti menunggu.</p><div class="hero"><b>Jujur di depan:</b> tugas ini repetitif dan bisa membosankan. Ada 200 putaran. Itu disengaja, karena pola keputusan baru terlihat dari pengulangan. Tiap blok ada jeda untuk tarik napas.</div><p>Urutannya: data diri singkat, kuesioner 13 butir, petunjuk, lalu tugas. Hasilmu muncul di akhir.</p>'+IDB(0),
+'<h1>Delayed Reward Task</h1><p class="story">A mini version of those moments, squeezed into about 15 minutes. There are no right or wrong answers. You only decide when to stop waiting.</p><div class="hero"><b>Honest heads-up:</b> this task is repetitive and can be boring. There are 200 rounds. That is deliberate, because decision patterns only show up through repetition. There is a pause for a deep breath after each block.</div><p>The order: a few questions about you, a 13-item questionnaire, instructions, then the task. Your results appear at the end.</p>'+IDB(1))];
+const SL=()=>[
+t('<h1>Cara mainnya</h1><div class="st"><span class="n">1</span><p>Sebuah imbalan muncul. Nilainya naik pelan-pelan, maksimal 10.</p></div><div class="st"><span class="n">2</span><p>Tekan <b>Ambil</b> (atau spasi) untuk menyimpan nilai yang tampil.</p></div><div class="st"><span class="n">3</span><p>Kalau imbalan <b>hangus</b> sebelum kamu menekan, nilainya jadi 0.</p></div><p>Kumpulkan poin sebanyak mungkin. Tidak ada jawaban benar atau salah, dan tidak perlu menghitung.</p>',
+'<h1>How it works</h1><div class="st"><span class="n">1</span><p>A reward appears. Its value rises slowly, up to 10.</p></div><div class="st"><span class="n">2</span><p>Press <b>Take</b> (or space) to bank the value shown.</p></div><div class="st"><span class="n">3</span><p>If the reward <b>expires</b> before you press, its value becomes 0.</p></div><p>Collect as many points as you can. There are no right or wrong answers, and no need to calculate.</p>'),
+t('<h1>Dua kondisi</h1><div class="row"><div>'+mini(0)+'<h3>Hijau (bulat)</h3><p>Naik pelan, jarang hangus.</p></div><div>'+mini(1)+'<h3>Merah (bergerigi)</h3><p>Naik cepat, sering hangus.</p></div></div><p>Risiko hangus punya tiga tingkat (tenang, sedang, ganas) dan bisa berganti tanpa diberi tahu. Pakai putaran sebelumnya sebagai petunjuk.</p><p class="mute">Latihan 7 putaran per kondisi (tidak dihitung), lalu 4 blok × 50 putaran.</p>',
+'<h1>Two conditions</h1><div class="row"><div>'+mini(0)+'<h3>Green (round)</h3><p>Rises slowly, rarely expires.</p></div><div>'+mini(1)+'<h3>Red (spiky)</h3><p>Rises fast, often expires.</p></div></div><p>The expiry risk has three levels (calm, medium, wild) and can switch without notice. Use earlier rounds as clues.</p><p class="mute">7 practice rounds per condition (not counted), then 4 blocks × 50 rounds.</p>')];
+function hook(){VIEW=hook;cur=null;const last=hs===3;show(HK()[hs].replace("</h1>","</h1>"+VZ[hs]())+'<div class="nav"><button class="alt" id="hb"'+(hs?"":" disabled")+'>'+t("Kembali","Back")+'</button><button id="st">'+(last?t("Mulai","Start"):t("Lanjut","Next")+" ("+(hs+1)+"/4)")+'</button></div>',true);
+  document.getElementById("hb").onclick=()=>{hs--;hook()};
+  document.getElementById("st").onclick=()=>{if(!last){hs++;hook();return}newSession();BS=Array(13).fill(0);DEMO={sex:"",age:"",edu:"",job:""};demo()}}
+function newSession(){SID=Math.random().toString(36).slice(2,10);STAMP=new Date().toISOString()}
+function intro(){
+  VIEW=intro;cur=null;GO_AT=Date.now()+400;
+  show(SL()[slide]+'<div class="nav"><button class="alt" id="pv">'+t("Kembali","Back")+'</button><button id="nx">'+(slide<1?t("Lanjut","Next")+" (1/2)":t("Mulai latihan (spasi)","Start practice (space)"))+"</button></div>",true);
+  document.getElementById("pv").onclick=()=>{if(slide){slide--;intro()}else survey()};
+  document.getElementById("nx").onclick=()=>{if(!document.getElementById("nx"))return;if(slide<1){slide++;intro()}else begin()};
+}
+let BT;
+function breath(){
+  VIEW=breath;cur=null;clearInterval(BT);
+  const done=plan.slice(0,bi).filter(x=>!x.prac).length;let n=16,ph=0;
+  show('<h1>'+t("Blok "+done+" dari 4 selesai","Block "+done+" of 4 done")+'</h1><div class="breath" aria-hidden="true"></div><p id="bp" role="status" style="text-align:center;font-weight:800;font-size:1.2rem;margin:0 0 8px"></p><p style="text-align:center">'+t("Tarik napas panjang dulu. Tarik lewat hidung, hembuskan pelan lewat mulut, ulangi beberapa kali.","Take a long breath first. In through your nose, out slowly through your mouth, a few times.")+'</p><button id="bgo" disabled style="width:100%"></button>',false);
+  const bp=document.getElementById("bp"),bg=document.getElementById("bgo");
+  const set=()=>{bp.textContent=ph%2?t("Hembuskan pelan...","Breathe out slowly..."):t("Tarik napas...","Breathe in...")};
+  const lab=()=>{bg.textContent=n>0?t("Lanjut ("+n+")","Continue ("+n+")"):t("Lanjut ke blok berikutnya","Continue to the next block")};
+  set();lab();
+  BT=setInterval(()=>{n--;if(n>0&&n%4===0){ph++;set()}lab();if(n<=0){bg.disabled=false;clearInterval(BT)}},1000);
+  bg.onclick=()=>{if(!bg.disabled){clearInterval(BT);blockIntro()}};
+}
+function begin(){
+  plan=[{s:0,n:7,prac:true},{s:1,n:7,prac:true}].concat(shuffle([0,1,0,1]).map(s=>({s,n:PER})));
+  bi=0;rd=0;log=[];score=0;SAMPLE=false;blockIntro();
+}
+const nm=s=>t("Kondisi "+ST[s].n,(s?"Red":"Green")+" condition");
+function blockIntro(){
+  VIEW=blockIntro;GO_AT=Date.now()+400;
+  const p=plan[bi],s=p.s,real=plan.slice(0,bi).filter(x=>!x.prac).length+1;
+  belief=PRIOR.slice();reg=Math.floor(Math.random()*3);
+  show('<h1>'+(p.prac?t("Latihan: ","Practice: "):t("Blok "+real+" dari 4: ","Block "+real+" of 4: "))+nm(s)+'</h1><svg viewBox="0 0 200 200" class="ball" style="width:150px" aria-hidden="true">'+shape(s,6,false).replace(/<text.*<\/text>/,"")+'</svg><p>'+(p.prac?t("Tujuh putaran untuk mencoba. Tidak dihitung.","Seven rounds to try it out. Not counted."):t("50 putaran di kondisi ini.","50 rounds in this condition."))+t(" Tingkat risiko diacak ulang di awal blok, jadi pelajari lagi dari awal."," The risk level is re-randomized at the start of each block, so learn it afresh.")+'</p><button id="go">'+t("Mulai (spasi)","Start (space)")+"</button>",true);
+  document.getElementById("go").onclick=()=>{if(document.getElementById("go"))startRound()};
+}
+function startRound(){
+  const p=plan[bi],s=p.s;
+  if(rd>0&&Math.random()<EPS){const o=[0,1,2].filter(i=>i!==reg);reg=o[Math.floor(Math.random()*2)]}
+  const b=trans(belief);
+  cur={bi,s,reg,h:ST[s].hs[reg],Tb:bestT(s,b),Tt:bestT(s,[0,1,2].map(i=>i===reg?1:0)),H:ent(b),ok:am(b)===reg,n:0,done:false,b:b};
+  const real=plan.slice(0,bi).filter(x=>!x.prac).length+1;
+  show('<div class="top"><span>'+(p.prac?t("Latihan","Practice"):t("Blok ","Block ")+real+"/4")+" · "+nm(s)+'</span><span>'+t("Putaran ","Round ")+(rd+1)+"/"+p.n+'</span><span>'+t("Skor ","Score ")+score+'</span></div><div class="bar"><i style="width:'+(rd/p.n*100)+'%"></i></div><svg class="ball" id="ball" viewBox="0 0 200 200" role="img" aria-label="Imbalan">'+shape(s,val(s,0),false)+'</svg><button class="take" id="take">'+t("Ambil","Take")+'</button><p class="mute" id="msg" role="status" style="text-align:center;margin:12px 0 0">'+t("Pikirkan dulu. Tekan Ambil atau spasi sebelum hangus.","Think first. Press Take or space before it expires.")+'</p>');
+  document.getElementById("take").onclick=()=>{if(!cur.done)end(false)};
+  document.getElementById("take").focus();
+  timer=setTimeout(()=>{if(!cur.done)timer=setInterval(tick,ST[cur.s].tk*(DEV&&TURBO?.25:1))},DEV&&TURBO?200:700);
+}
+function tick(){
+  if(cur.done)return;
+  cur.n++;
+  if(cur.n>GRACE&&Math.random()<cur.h){end(true);return}
+  document.getElementById("ball").innerHTML=shape(cur.s,val(cur.s,cur.n),false);
+  if(cur.n>=capT(cur.s)+EXTRA)end(false);
+}
+function end(burst){
+  clearInterval(timer);clearTimeout(timer);cur.done=true;
+  const m=document.getElementById("msg");document.getElementById("take").disabled=true;
+  let pts=0;
+  if(burst){document.getElementById("ball").innerHTML=shape(cur.s,val(cur.s,cur.n-1),true);m.textContent=t("Hangus. Poin putaran ini hilang.","Expired. This round’s points are lost.")}
+  else{pts=val(cur.s,cur.n);if(!plan[cur.bi].prac)score+=pts;m.textContent=t("Tersimpan: ","Banked: ")+fmt(pts)+t(" poin"," points")}
+  if(!plan[cur.bi].prac)log.push({blk:cur.bi,s:cur.s,reg:cur.reg,h:cur.h,Tb:cur.Tb,Tt:cur.Tt,H:cur.H,ok:cur.ok,n:cur.n,burst:burst,pts:pts});
+  belief=upd(cur.b,cur.s,cur.n,burst);
+  NT=setTimeout(next,DEV&&TURBO?250:900);
+}
+function next(){
+  rd++;
+  if(rd>=plan[bi].n){const was=plan[bi];bi++;rd=0;if(bi>=plan.length){result();return}if(!was.prac){breath();return}blockIntro();return}
+  startRound();
+}
+
+let BS=Array(13).fill(0),DEMO={sex:"",age:"",edu:"",job:""};
+const BS_REV=[0,1,1,1,1,1,1,1,0,1,1,0,0];
+const BS_ID=["Secara umum, saya dapat menahan godaan apapun dengan baik.","Saya kesulitan menghentikan kebiasaan buruk.","Saya pemalas.","Saya mengatakan hal-hal yang tidak pantas.","Saya melakukan beberapa hal buruk jika hal tersebut menyenangkan.","Saya berharap saya memiliki lebih banyak kedisiplinan diri.","Hal yang menyenangkan dan bersenang-senang kadang menahan saya untuk menyelesaikan pekerjaan.","Saya kesulitan berkonsentrasi.","Saya dapat bekerja dengan efektif dalam meraih tujuan jangka panjang.","Terkadang saya tidak bisa menghentikan diri saya dari sesuatu, meskipun saya tahu itu salah.","Saya sering bertindak tanpa mempertimbangkan seluruh alternatif.","Saya menolak hal-hal yang buruk untuk diri saya","Orang-orang mengatakan saya memiliki kedisiplinan diri yang kuat."];
+const BS_EN=["I am good at resisting temptation.","I have a hard time breaking bad habits.","I am lazy.","I say inappropriate things.","I do certain things that are bad for me, if they are fun.","I wish I had more self-discipline.","Pleasure and fun sometimes keep me from getting work done.","I have trouble concentrating.","I am able to work effectively toward long-term goals.","Sometimes I can’t stop myself from doing something, even if I know it is wrong.","I often act without thinking through all the alternatives.","I refuse things that are bad for me.","People would say that I have iron self-discipline."];
+const EDU_ID=["Tidak tamat SD","Lulus SD/sederajat","Lulus SMP/sederajat","Lulus SMA/SMK/sederajat","Lulus Diploma (D1–D3)","Lulus S1/D4","Lulus S2","Lulus S3"];
+const EDU_EN=["Did not finish elementary school","Elementary school graduate","Junior high school graduate","Senior high/vocational school graduate","Diploma graduate (D1–D3)","Bachelor’s graduate (S1/D4)","Master’s graduate (S2)","Doctorate graduate (S3)"];
+const pill=(nm,v,l,on)=>'<label class="pill"><input type="radio" name="'+nm+'" value="'+v+'"'+(on?" checked":"")+'><span>'+l+'</span></label>';
+function survey(){
+  VIEW=survey;cur=null;
+  const Q=LG==="id"?BS_ID:BS_EN;
+  let h='<h1>'+t("Kuesioner kontrol diri","Self-control questionnaire")+'</h1><p>'+t("Jawab 13 pernyataan berikut tentang dirimu secara umum. Tidak ada jawaban benar atau salah.","Answer the following 13 statements about yourself in general. There are no right or wrong answers.")+'</p><p><b>'+t("1 = Sama sekali tidak seperti saya, 5 = Sangat seperti saya","1 = Not at all like me, 5 = Very much like me")+'</b></p><p class="mute" id="pg"></p>';
+  Q.forEach((q,i)=>{
+    h+='<fieldset class="lk" id="q'+i+'"><legend>'+(i+1)+'. '+q+'</legend><div class="opts">';
+    for(let v=1;v<=5;v++)h+='<label><input type="radio" name="b'+i+'" value="'+v+'"'+(BS[i]===v?" checked":"")+'><span>'+v+'</span></label>';
+    h+='</div><div class="ends"><span>'+t("Sama sekali tidak seperti saya","Not at all like me")+'</span><span>'+t("Sangat seperti saya","Very much like me")+'</span></div></fieldset>';
+  });
+  h+='<p class="errm" id="em" role="alert"></p><div class="nav"><button class="alt" id="sb">'+t("Kembali","Back")+'</button><button id="sn">'+t("Lanjut","Next")+'</button></div><p class="mute" style="margin-top:14px">'+t("Skala: Brief Self-Control Scale, versi Indonesia (Arifin & Milla, 2020), diadaptasi dari Tangney dkk. (2004).","Scale: Brief Self-Control Scale, Indonesian version (Arifin & Milla, 2020), adapted from Tangney et al. (2004).")+'</p>';
+  show(h,true);window.scrollTo(0,0);
+  const pg=()=>{document.getElementById("pg").textContent=t("Terjawab ","Answered ")+BS.filter(x=>x).length+"/13"};pg();
+  app.querySelectorAll('input[type=radio]').forEach(e=>e.onchange=()=>{BS[+e.name.slice(1)]=+e.value;e.closest("fieldset").classList.remove("err");document.getElementById("em").textContent="";pg()});
+  document.getElementById("sb").onclick=demo;
+  document.getElementById("sn").onclick=()=>{
+    const i=BS.findIndex(x=>!x);
+    if(i>=0){const f=document.getElementById("q"+i);f.classList.add("err");document.getElementById("em").textContent=t("Masih ada pernyataan yang belum dijawab.","Some statements are still unanswered.");f.scrollIntoView({block:"center"});return}
+    slide=0;intro();
+  };
+}
+function demo(){
+  VIEW=demo;cur=null;
+  const sx=[["male",t("Laki-laki","Male")],["female",t("Perempuan","Female")],["na",t("Memilih tidak menjawab","Prefer not to say")]];
+  const jb=[["working",t("Bekerja","Working")],["not_working",t("Tidak bekerja","Not working")]];
+  const ED=LG==="id"?EDU_ID:EDU_EN;
+  const h='<h1>'+t("Data diri","About you")+'</h1><p>'+t("Empat pertanyaan singkat dulu. Datamu dipakai untuk penelitian dan tidak menampilkan namamu.","Four quick questions first. Your answers are used for research and do not show your name.")+'</p>'+
+  '<div class="fld"><div class="t">'+t("Jenis kelamin","Sex")+'</div><div class="pills">'+sx.map(a=>pill("sex",a[0],a[1],DEMO.sex===a[0])).join("")+'</div></div>'+
+  '<div class="fld"><label class="t" for="age">'+t("Usia (dalam tahun, angka saja)","Age (in years, numbers only)")+'</label><input class="inp" id="age" type="number" inputmode="numeric" min="10" max="100" step="1" value="'+DEMO.age+'"></div>'+
+  '<div class="fld"><label class="t" for="edu">'+t("Tingkat pendidikan","Level of education")+'</label><select class="inp" id="edu"><option value="">'+t("Pilih...","Select...")+'</option>'+ED.map((e,i)=>'<option value="'+(i+1)+'"'+(DEMO.edu==i+1?" selected":"")+'>'+e+'</option>').join("")+'</select></div>'+
+  '<div class="fld"><div class="t">'+t("Status pekerjaan","Employment status")+'</div><div class="pills">'+jb.map(a=>pill("job",a[0],a[1],DEMO.job===a[0])).join("")+'</div></div>'+
+  '<p class="errm" id="em" role="alert"></p><div class="nav"><button class="alt" id="bk">'+t("Kembali","Back")+'</button><button id="dn">'+t("Lanjut","Next")+'</button></div>';
+  show(h,true);window.scrollTo(0,0);
+  app.querySelectorAll('input[name=sex]').forEach(e=>e.onchange=()=>{DEMO.sex=e.value});
+  app.querySelectorAll('input[name=job]').forEach(e=>e.onchange=()=>{DEMO.job=e.value});
+  document.getElementById("age").oninput=e=>{DEMO.age=e.target.value.trim()};
+  document.getElementById("edu").onchange=e=>{DEMO.edu=e.target.value};
+  document.getElementById("bk").onclick=hook;
+  document.getElementById("dn").onclick=()=>{
+    const a=DEMO.age,n=Number(a);let m="";
+    if(!DEMO.sex||!a||!DEMO.edu||!DEMO.job)m=t("Mohon jawab semua pertanyaan.","Please answer every question.");
+    else if(!/^\d+$/.test(a)||n<10||n>100)m=t("Usia harus angka bulat antara 10 dan 100.","Age must be a whole number between 10 and 100.");
+    if(m){document.getElementById("em").textContent=m;return}
+    survey();
+  };
+}
+
+function chart(series,ymax,label){
+  const W=640,H=230,L=44,R=10,T=12,B=28,n=log.length;
+  const x=i=>L+(W-L-R)*(n<2?0:i/(n-1)),y=v=>T+(H-T-B)*(1-v/ymax);
+  let s='<svg class="ch" viewBox="0 0 '+W+" "+H+'" role="img" aria-label="'+label+'">';
+  [0,0.5,1].forEach(f=>{const v=ymax*f;s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#CFC6EE"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="12" fill="#4A4270">'+f1(v)+"</text>"});
+  const real=plan.filter(p=>!p.prac);
+  real.forEach((p,k)=>{
+    const a=k*PER,e=a+PER-1;
+    if(k>0)s+='<line x1="'+((x(a-1)+x(a))/2)+'" x2="'+((x(a-1)+x(a))/2)+'" y1="'+T+'" y2="'+(H-B)+'" stroke="'+INK+'" stroke-dasharray="3 4"/>';
+    s+='<text x="'+((x(a)+x(e))/2)+'" y="'+(H-9)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+INK+'">'+ST[p.s].n+"</text>";
+  });
+  series.forEach(se=>{
+    let d="",o=false;
+    se.v.forEach((v,i)=>{if(v==null){o=false;return}d+=(o?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)+" ";o=true});
+    if(!se.dots)s+='<path d="'+d+'" fill="none" stroke="'+se.c+'" stroke-width="2.4"'+(se.dash?' stroke-dasharray="6 4"':"")+"/>";
+    else se.v.forEach((v,i)=>{if(v!=null)s+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="2.6" fill="'+se.c+'"/>'});
+  });
+  return s+"</svg>";
+}
+function words(g,mid,hi,lo,ok){
+  if(Math.abs(g)<0.6)return ok;
+  return (g>0?hi:lo).replace("X",f1(Math.abs(g)));
+}
+function result(){
+  VIEW=result;cur=null;
+  const SB=SAMPLE?'<div class="hero noprint"><b>Mode developer:</b> ini DATA CONTOH yang tetap (sama setiap kali). Tidak dikirim ke peneliti.</div>':"";
+  const takes=log.filter(x=>!x.burst);
+  const bg=mean(log.map(x=>sec(x.Tb-x.Tt,x.s))),cg=mean(takes.map(x=>sec(x.n-x.Tb,x.s)));
+  const bursts=log.length-takes.length,ok=mean(log.map(x=>x.ok?1:0)),H=mean(log.map(x=>x.H));
+  const act=log.map(x=>x.burst?null:sec(x.n,x.s)),bel=log.map(x=>sec(x.Tb,x.s)),tru=log.map(x=>sec(x.Tt,x.s));
+  const ymax=Math.max(2,Math.ceil(Math.max(...act.filter(v=>v!=null),...bel,...tru)));
+  const rows=ST.map((s,k)=>"<tr><td>"+t(s.n,k?"Red":"Green")+"</td><td>+"+fmt(s.g)+t(" poin"," pts")+"</td><td>"+f1(s.tk/1000)+" s</td><td>±"+f1(capT(k)*s.tk/1000)+" s</td><td>"+s.hs.map(pct).join(", ")+"</td></tr>").join("");
+  const c=(a,b)=>t(a,b);
+  const fx=v=>LG==="id"?String(v).replace(".",","):String(v);
+  const ex=[[4,"3","2.080"],[5,"3.5","2.154"],[6,"4","2.187"],[7,"4.5","2.190"],[8,"5","2.168"]].map(r=>"<tr><td>"+r[0]+"</td><td>"+fx(r[1])+"</td><td>"+fx(r[2])+(r[0]===7?c(" (terbaik)"," (best)"):"")+"</td></tr>").join("");
+  const EXPL='<h2>'+c("Cara membaca grafik dan cara menghitungnya","How to read the chart and how it is calculated")+'</h2><ul><li>'+c("<b>Titik hitam</b>: kapan kamu benar-benar menekan Ambil. Hanya ada untuk putaran yang kamu Ambil.","<b>Black dots</b>: when you actually pressed Take. Only for rounds you banked.")+'</li><li>'+c("<b>Garis oranye (ideal rasional dari pengalamanmu)</b>: waktu berhenti terbaik menurut hitungan, kalau seseorang menalar dengan benar dari riwayat putaran yang sama persis denganmu. Ini bukan isi kepalamu dan bukan tebakan yang kamu ketik: tes ini tidak menanyakan tebakanmu.","<b>Orange line (rational ideal from your experience)</b>: the best stopping time by calculation, if someone reasoned correctly from exactly your round history. It is not what was in your head and not a guess you typed: the task does not ask for your guess.")+'</li><li>'+c("<b>Garis hijau (ideal sebenarnya)</b>: waktu berhenti terbaik kalau suasana aslinya diketahui pasti. Program tahu, kamu tidak.","<b>Green line (true ideal)</b>: the best stopping time if the condition’s real mood were known for certain. The program knows it, you do not.")+'</li></ul><p><b>'+c("Cara hitung tiap putaran","How each round is calculated")+'</b></p><ol><li>'+c("Keyakinan awal tiap blok: tenang, sedang, ganas = 33% / 33% / 33% (prior).","Starting belief of each block: calm, medium, wild = 33% / 33% / 33% (prior).")+'</li><li>'+c("Setelah tiap putaran, keyakinan diperbarui dengan aturan Bayes: hangus cepat menaikkan “ganas”, imbalan yang sempat penuh menaikkan “tenang”. Lalu digeser sedikit karena suasana bisa berganti (8% per putaran).","After each round the belief is updated by Bayes’ rule: an early expiry raises “wild”, a reward that got full raises “calm”. It is then shifted slightly because the mood can switch (8% per round).")+'</li><li>'+c("Untuk tiap tik T, hitung hasil rata-rata kalau berhenti di sana: poin di tik itu × peluang selamat sampai sana, dirata-rata dengan bobot keyakinan.","For each tick T, compute the average payoff of stopping there: points at that tick × chance of surviving to it, averaged with the belief as weights.")+'</li><li>'+c("Ambil T dengan hasil rata-rata tertinggi. Itu garis oranye. Garis hijau dihitung sama, tapi dengan suasana asli sebagai satu-satunya kemungkinan.","Pick the T with the highest average payoff. That is the orange line. The green line is computed the same way, but with the real mood as the only possibility.")+'</li></ol><p>'+c("Contoh di Kondisi Hijau, dengan keyakinan 10% tenang, 30% sedang, 60% ganas (peluang hangus 5%, 9%, 14%):","Example in the Green condition, with a belief of 10% calm, 30% medium, 60% wild (expiry chances 5%, 9%, 14%):")+'</p><table class="tbl"><tr><th>'+c("Berhenti di tik","Stop at tick")+'</th><th>'+c("Poin","Points")+'</th><th>'+c("Hasil rata-rata","Average payoff")+'</th></tr>'+ex+'</table><p class="mute">'+c("Terbaik di tik 7, yaitu 7 × 0,45 ≈ 3,2 detik. Kalau keyakinan lebih condong ke tenang, waktunya jauh lebih lama.","Best at tick 7, i.e. 7 × 0.45 ≈ 3.2 seconds. If the belief leaned more toward calm, the time would be much longer.")+'</p><p>'+c("<b>Kenapa oranye dan hijau bisa beda:</b> dari pengalaman, suasana asli tidak pernah bisa diketahui pasti. Rentetan sial membuat keyakinan terlalu ganas, rentetan mujur membuatnya terlalu tenang, dan setelah suasana berganti keyakinan butuh beberapa putaran untuk menyusul. <b>Kenapa hitam dan oranye bisa beda:</b> keputusanmu bisa dipengaruhi kebiasaan, takut rugi, bosan, buru-buru, atau godaan untuk terus menunggu. Selisih itulah yang dilaporkan sebagai “apa yang kamu lakukan”.","<b>Why orange and green can differ:</b> from experience alone, the real mood can never be known for certain. A run of bad luck makes the belief too wild, a lucky run makes it too calm, and after the mood switches the belief takes a few rounds to catch up. <b>Why black and orange can differ:</b> your decision can be shaped by habit, fear of loss, boredom, hurry, or the temptation to keep waiting. That gap is what is reported as “what you did”.")+'</p>';
+  const SK=skill(log),msd=mean(log.map(x=>ST[x.s].tk))/1000;
+  const dT=Math.abs(SK.d)<0.5?c("mendekati ideal","close to ideal"):SK.d>0?c("cenderung menunggu lebih lama dari ideal","tends to wait longer than ideal"):c("cenderung berhenti lebih cepat dari ideal","tends to stop sooner than ideal");
+  const sT=SK.sg<1?c("sangat konsisten","very consistent"):SK.sg<2?c("cukup konsisten","fairly consistent"):c("cukup berubah-ubah","fairly variable");
+  const HERO='<div class="hero"><div class="hl">'+c("Skor Kontrol","Control Skill Score")+'</div><div class="hn">'+fx(SK.sc.toFixed(2))+'</div><p style="margin:6px 0">'+c("1 = selalu mengikuti keputusan terbaik dari pengalamanmu sendiri, 0 = sama kacaunya dengan menekan acak, negatif = lebih buruk dari acak.","1 = always following the best decision from your own experience, 0 = as messy as pressing at random, negative = worse than random.")+'</p><p style="margin:0">'+c("Bias (δ) ","Bias (δ) ")+fx((SK.d>0?"+":"")+SK.d.toFixed(1))+c(" tik (≈ "," ticks (≈ ")+fx((SK.d*msd).toFixed(2))+c(" detik): "," s): ")+dT+c(". Konsistensi (σ) ",". Consistency (σ) ")+fx(SK.sg.toFixed(1))+c(" tik: "," ticks: ")+sT+".</p><p class=\"mute\" style=\"margin:6px 0 0\">"+c("Kata-kata ini patokan kasar, belum dinormalkan pada data peserta.","These wordings are rough guides, not yet normalized on participant data.")+"</p></div>";
+  const SKX='<h2>'+c("Cara menghitung Skor Kontrol","How the Control Skill Score is calculated")+'</h2><ol><li>'+c("Tiap orang diasumsikan punya niat berhenti di sekitar waktu ideal rasional, ditambah bias δ, dengan sebaran acak σ.","Each person is assumed to intend to stop around the rational ideal time, plus a bias δ, with random spread σ.")+'</li><li>'+c("Putaran yang kamu Ambil memberi tahu niat berhentimu hampir tepat. Putaran yang hangus atau diambil otomatis hanya memberi tahu “setidaknya segini”. Semua putaran dipakai, tidak ada yang dibuang (data tersensor; Tobin, 1958).","A round you banked tells us your intended stop almost exactly. A round that expired or was auto-banked only tells us “at least this long”. Every round is used and none is discarded (censored data; Tobin, 1958).")+'</li><li>'+c("δ dan σ dipilih yang paling cocok dengan semua putaran sekaligus (kemungkinan terbesar).","δ and σ are chosen to fit all rounds at once (maximum likelihood).")+'</li><li>'+c("Dari δ dan σ, dihitung poin harapan yang hilang dibanding ideal rasional, lalu dibandingkan dengan perilaku acak. Skor = 1 − (kerugianmu ÷ kerugian acak).","From δ and σ, the expected points lost versus the rational ideal are computed and compared with random behavior. Score = 1 − (your loss ÷ random loss).")+'</li></ol><p class="mute">'+c("Skor ini bergantung pada model hitungan (bukan tebakan yang kamu ketik), ikut turun karena takut rugi, bosan, atau buru-buru, dan belum divalidasi. Pada simulasi agen buatan, skor estimasi berkorelasi 0,99 dengan skor asli, tetapi itu hanya menguji bahwa estimatornya berjalan bila modelnya benar.","This score depends on the calculation model (not a guess you typed), also drops with fear of loss, boredom, or hurry, and is not validated. In a simulation of artificial agents, the estimated score correlated 0.99 with the true score, but that only tests that the estimator works when the model is true.")+'</p>';
+  show('<h1>'+c("Laporan Tugas Penundaan Imbalan","Delayed Reward Task Report")+'</h1><p class="mute">'+c("Dibuat ","Created ")+new Date().toLocaleString(LG==="id"?"id-ID":"en-GB")+". "+c("Prototipe, bukan alat diagnosis.","Prototype, not a diagnostic tool.")+'</p>'+SB+HERO+'<p>'+c("Skor <b>","Score <b>")+score+c("</b> dari "+log.length+" putaran. Hangus di "," of "+log.length+" rounds</b>. Expired in ")+bursts+c(" putaran."," rounds.")+'</p>'+
+  '<h2>'+c("Apa yang ditunjukkan pengalamanmu","What your experience pointed to")+'</h2><p>'+words(bg,0,c("Rata-rata riwayat putaranmu mengarah ke kesimpulan bahwa kondisi lebih aman dari kenyataan: ideal rasional dari pengalamanmu lebih lama X detik dari ideal sebenarnya.","On average your round history pointed to conditions being safer than they were: the rational ideal from your experience was X seconds longer than the true ideal."),c("Rata-rata riwayat putaranmu mengarah ke kesimpulan bahwa kondisi lebih berbahaya dari kenyataan: ideal rasional dari pengalamanmu lebih singkat X detik dari ideal sebenarnya.","On average your round history pointed to conditions being more dangerous than they were: the rational ideal from your experience was X seconds shorter than the true ideal."),c("Pengalamanmu cukup akurat menunjukkan tingkat bahaya tiap kondisi.","Your experience showed the conditions’ danger fairly accurately."))+'</p>'+
+  '<h2>'+c("Apa yang kamu lakukan","What you did")+'</h2><p>'+words(cg,0,c("Kamu menunggu rata-rata X detik lebih lama dari ideal rasional berdasarkan pengalamanmu.","You waited on average X seconds longer than the rational ideal from your experience."),c("Kamu menekan Ambil rata-rata X detik lebih cepat dari ideal rasional berdasarkan pengalamanmu.","You pressed Take on average X seconds sooner than the rational ideal from your experience."),c("Waktu Ambilmu sejalan dengan ideal rasional dari pengalamanmu.","Your Take timing matched the rational ideal from your experience."))+'</p><p class="mute">'+c("Dua angka dipisah dengan sengaja: yang pertama soal seberapa jauh pengalamanmu menyesatkan, yang kedua soal selisih antara yang kamu lakukan dan yang rasional. Tes ini tidak menanyakan tebakanmu langsung.","The two numbers are kept apart on purpose: the first is about how far your experience misled, the second about the gap between what you did and what was rational. The task never asks for your guess directly.")+'</p>'+
+  '<h2>'+c("Dari tebakan awal ke pengalaman","From starting guess to experience")+'</h2><p>'+c("Tebakan awal (prior) 33% / 33% / 33% punya ketidakpastian 1,58 bit. Rata-rata selama main, ketidakpastian itu turun jadi "+f1(H)+" bit. Suasana yang paling mungkin menurut perhitungan Bayes cocok dengan suasana asli di "+pct(ok)+" putaran (kebetulan murni kira-kira 33%).","The starting guess (prior) of 33% / 33% / 33% carries 1.58 bits of uncertainty. Averaged over play, that uncertainty fell to "+f1(H).replace(",",".")+" bits. The most likely mood by Bayes’ rule matched the true mood in "+pct(ok)+" of rounds (pure chance is about 33%).")+'</p>'+
+  '<h2>'+c("Waktu tunggu tiap putaran (detik)","Wait time per round (seconds)")+'</h2>'+chart([{v:tru,c:"#12A87A",dash:true},{v:bel,c:"#E08A00"},{v:act,c:INK,dots:true}],ymax,c("Waktu Ambil aktual, ideal rasional dari pengalaman, dan ideal sebenarnya","Actual Take time, rational ideal from experience, and true ideal"))+
+  '<div class="leg"><span><b style="background:'+INK+'"></b>'+c("Waktu kamu menekan Ambil","When you pressed Take")+'</span><span><b style="background:#E08A00"></b>'+c("Ideal rasional dari pengalamanmu (hitungan)","Rational ideal from your experience (calculated)")+'</span><span><b style="background:#12A87A"></b>'+c("Ideal sebenarnya (suasana asli diketahui)","True ideal (real mood known)")+'</span></div>'+
+  SKX+EXPL+'<h2>'+c("Parameter sesi","Session parameters")+'</h2><table class="tbl"><tr><th>'+c("Kondisi","Condition")+'</th><th>'+c("Naik per tik","Rise per tick")+'</th><th>'+c("Durasi tik","Tick length")+'</th><th>'+c("Penuh (10)","Full (10)")+'</th><th>'+c("Peluang hangus per tik (tenang, sedang, ganas)","Expiry chance per tick (calm, medium, wild)")+'</th></tr>'+rows+'</table><p class="mute">'+c("Tik pertama selalu aman; imbalan muncul 0,7 detik sebelum naik. Peluang ganti suasana "+pct(EPS)+" per putaran. Prior 33% / 33% / 33% di awal tiap blok. 4 blok × 50 putaran, urutan kondisi diacak.","The first tick is always safe; the reward appears 0.7 s before rising. Mood switch chance "+pct(EPS)+" per round. Prior 33% / 33% / 33% at the start of each block. 4 blocks × 50 rounds, condition order randomized.")+'</p>'+
+  '<h2>'+c("Catatan","Notes")+'</h2><ul class="mute"><li>'+c("Perhitungan memakai model sederhana: peserta dianggap memperbarui tebakan dengan aturan Bayes (Bayes, 1763), dengan kemungkinan suasana berganti seperti pada model change-point (Behrens dkk., 2007; Adams & MacKay, 2007). Ketidakpastian diukur dengan entropi Shannon (Shannon, 1948). Hasilnya estimasi, bukan fakta tentang dirimu.","The calculation uses a simple model: the participant is assumed to update their guess by Bayes’ rule (Bayes, 1763), with moods that can switch as in change-point models (Behrens et al., 2007; Adams & MacKay, 2007). Uncertainty is measured with Shannon entropy (Shannon, 1948). The result is an estimate, not a fact about you.")+'</li><li>'+c("Menunggu dengan risiko hangus yang tidak diketahui mengikuti gagasan bahwa berhenti cepat bisa masuk akal bila lingkungan dinilai tidak bisa dipercaya (Kidd dkk., 2013; McGuire & Kable, 2013). Imbalan yang membesar mirip BART (Lejuez dkk., 2002), tetapi di sini risikonya berubah-ubah dan poin dibatasi 10. Menunggu demi hadiah lebih besar berasal dari tradisi tugas penundaan kepuasan (Mischel dkk., 1972).","Waiting under an unknown expiry risk follows the idea that stopping early can be reasonable when the environment seems unreliable (Kidd et al., 2013; McGuire & Kable, 2013). The growing reward resembles the BART (Lejuez et al., 2002), but here the risk shifts over time and points are capped at 10. Waiting for a larger reward comes from the delay-of-gratification tradition (Mischel et al., 1972).")+'</li><li>'+c("Tes perilaku untuk kontrol diri umumnya punya reliabilitas uji-ulang rendah dan hubungan lemah sampai sedang dengan kuesioner (Enkavi dkk., 2019; Duckworth & Kern, 2011). Tes ini belum divalidasi: rujukan di bawah menjadi dasar konsep, bukan bukti bahwa tes ini valid.","Behavioral self-control tasks generally show low test-retest reliability and weak to moderate links with questionnaires (Enkavi et al., 2019; Duckworth & Kern, 2011). This task is not validated: the references below support the concepts, not the validity of this task.")+'</li><li>'+c("Angka menahan diri hanya dihitung dari putaran yang kamu Ambil, karena putaran yang hangus tidak menunjukkan berapa lama kamu sebenarnya mau menunggu.","The holding-back number uses only rounds you banked, because a expired round does not show how long you actually meant to wait.")+'</li></ul>'+
+  '<h2>'+c("Rujukan","References")+'</h2><ol class="refs">'+REFS.map(r=>"<li>"+r+"</li>").join("")+'</ol><p class="mute">'+c("Rujukan menjadi dasar konsep. Parameter (peluang, kecepatan naik, batas 10 poin) adalah rancangan prototipe ini dan belum dikalibrasi pada data peserta.","References support the concepts. The parameters (chances, rise speed, 10-point cap) are this prototype’s design and have not been calibrated on participant data.")+'</p>'+
+  '<p class="noprint"><button id="pdf">'+c("Unduh PDF","Download PDF")+'</button> <button class="alt" id="again">'+c("Main lagi","Play again")+'</button> <button class="alt" id="csv">'+c("CSV per putaran","CSV per round")+'</button> <button class="alt" id="csvs">'+c("CSV ringkasan","CSV summary")+'</button> <button class="alt" id="copy">'+c("Salin data (JSON)","Copy data (JSON)")+'</button></p><p class="mute noprint" id="cm" role="status">'+c("Unduh PDF membuka jendela cetak: pilih Simpan sebagai PDF.","Download PDF opens the print dialog: choose Save as PDF.")+'</p>',true);
+  document.getElementById("pdf").onclick=()=>{const d=document.title;document.title="Laporan-Tugas-Imbalan-"+new Date().toISOString().slice(0,10);window.print();setTimeout(()=>{document.title=d},500)};
+  document.getElementById("csv").onclick=csv;
+  document.getElementById("csvs").onclick=csvSum;
+  document.getElementById("again").onclick=()=>{newSession();slide=0;intro()};
+  document.getElementById("copy").onclick=()=>{
+    const j=JSON.stringify(log.map((x,i)=>({putaran:i+1,blok:Math.floor(i/PER)+1,kondisi:ST[x.s].n,suasana:REG[x.reg],peluang_hangus:x.h,tik_ambil:x.n,hangus:x.burst,poin:x.pts,tik_ideal_tebakan:x.Tb,tik_ideal_asli:x.Tt,entropi_bit:+x.H.toFixed(3)})),null,1);
+    const cm=document.getElementById("cm");
+    (navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>cm.textContent=c("Data tersalin.","Data copied.")).catch(()=>cm.textContent=c("Gagal menyalin. Buka lewat alamat https atau file lokal.","Copy failed. Open via https or a local file."));
+  };
+  autoSend();
+}
+
+const cyrb53=s=>{let a=0xdeadbeef,b=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return 4294967296*(2097151&b)+(a>>>0)};
+const PWH=1380757557876913;
+const mulb=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let x=Math.imul(a^a>>>15,1|a);x=x+Math.imul(x^x>>>7,61|x)^x;return((x^x>>>14)>>>0)/4294967296};
+const devPlan=()=>[{s:0,n:7,prac:true},{s:1,n:7,prac:true}].concat([0,1,0,1].map(s=>({s,n:PER})));
+function buildSample(){
+  const R=mulb(20261111);plan=devPlan();log=[];score=0;
+  plan.filter(p=>!p.prac).forEach((p,k)=>{
+    const s=p.s;let b=PRIOR.slice(),rg=Math.floor(R()*3);
+    for(let r=0;r<PER;r++){
+      if(r>0&&R()<EPS){const o=[0,1,2].filter(i=>i!==rg);rg=o[Math.floor(R()*2)]}
+      const bb=trans(b),h=ST[s].hs[rg],Tb=bestT(s,bb),Tt=bestT(s,[0,1,2].map(i=>i===rg?1:0));
+      const want=Math.max(0,Math.round(Tb+0.7+(R()+R()+R()-1.5)*2.2)),cap=capT(s)+EXTRA;
+      let n=0,burst=false;
+      while(n<want&&n<cap){n++;if(n>GRACE&&R()<h){burst=true;break}}
+      const pts=burst?0:val(s,n);score+=pts;
+      log.push({blk:k,s,reg:rg,h,Tb,Tt,H:ent(bb),ok:am(bb)===rg,n,burst,pts});
+      b=upd(bb,s,n,burst);
+    }
+  });
+  SAMPLE=true;
+}
+function curStage(){
+  if(VIEW===hook)return hs;if(VIEW===demo)return 4;if(VIEW===survey)return 5;if(VIEW===intro)return 6+slide;
+  if(VIEW===blockIntro||VIEW===breath)return 8+bi;if(VIEW===result)return 14;return 0}
+function stageLabels(){
+  const p=plan||devPlan(),c=s=>s?"Merah":"Hijau";
+  return ["Cerita 1/4","Cerita 2/4","Cerita 3/4","Cerita 4/4","Data diri","Kuesioner","Petunjuk 1/2","Petunjuk 2/2"].concat(p.map((x,k)=>x.prac?"Latihan "+c(x.s):"Blok "+(k-1)+" · "+c(x.s)),["Hasil (data contoh)"])}
+function devGo(i){
+  i=Math.max(0,Math.min(14,i));
+  clearInterval(timer);clearTimeout(timer);clearTimeout(NT);clearInterval(BT);cur=null;
+  if(i>=5&&!DEMO.age)DEMO={sex:"na",age:"25",edu:"6",job:"working"};
+  if(i>=6&&BS.some(x=>!x))BS=BS.map((x,k)=>x||(k*2+1)%5+1);
+  if(!SID)newSession();
+  if(i<4){hs=i;hook()}
+  else if(i===4)demo();
+  else if(i===5)survey();
+  else if(i<8){slide=i-6;intro()}
+  else if(i<14){plan=plan||devPlan();if(SAMPLE){SAMPLE=false;plan=devPlan()}log=[];score=0;bi=i-8;rd=0;blockIntro()}
+  else{buildSample();result()}
+}
+function devSync(){
+  const s=document.getElementById("dvj");if(!s)return;
+  const L=stageLabels(),i=curStage(),k=L.join("|");
+  if(s.dataset.k!==k){s.innerHTML=L.map((x,j)=>'<option value="'+j+'">'+(j+1)+". "+x+"</option>").join("");s.dataset.k=k}
+  s.value=i;document.getElementById("dvs").textContent=(i+1)+"/"+L.length+" · "+L[i];
+}
+function devBtn(){
+  if(document.getElementById("dvb"))return;
+  const b=document.createElement("button");b.id="dvb";b.className="alt devbtn noprint";b.textContent="Developer";b.onclick=gate;document.body.appendChild(b);
+}
+function gate(){
+  if(document.getElementById("ov"))return;
+  const o=document.createElement("div");o.className="ov noprint";o.id="ov";
+  o.innerHTML='<div class="panel" role="dialog" aria-modal="true" aria-label="Developer mode"><h2 style="margin-top:0">Developer mode</h2><p class="mute">Masukkan password.</p><input class="inp" id="pw" type="password" autocomplete="off"><p class="errm" id="pe" role="alert"></p><div class="nav" style="margin-top:8px"><button class="alt" id="pc">Batal</button><button id="po">Masuk</button></div></div>';
+  document.body.appendChild(o);
+  const pw=document.getElementById("pw"),go=()=>{if(cyrb53(pw.value.trim())===PWH){o.remove();devOn()}else{document.getElementById("pe").textContent="Password salah.";pw.select()}};
+  pw.focus();document.getElementById("po").onclick=go;document.getElementById("pc").onclick=()=>o.remove();
+  pw.onkeydown=e=>{if(e.key==="Enter")go();if(e.key==="Escape")o.remove()};o.onclick=e=>{if(e.target===o)o.remove()};
+}
+function devOn(){
+  DEV=true;try{sessionStorage.setItem("dev","1")}catch(e){}
+  const b=document.getElementById("dvb");if(b)b.remove();
+  document.body.classList.add("dev");
+  const d=document.createElement("div");d.id="dev";d.className="noprint";
+  d.innerHTML='<div class="dr"><span class="tag">DEV</span><b id="dvs"></b><span style="opacity:.75">· data tidak dikirim</span></div><div class="dr"><button class="alt" id="dvp" title="Tombol P">◀ Prev</button><select id="dvj" aria-label="Lompat ke tahap"></select><button id="dvn" title="Tombol N">Next task ▶</button></div><div class="dr"><label><input type="checkbox" id="dvt"> Turbo ×4</label><button class="alt" id="dvr">Lompat ke hasil contoh</button><button class="alt" id="dvx">Keluar</button></div>';
+  document.body.appendChild(d);
+  const $=i=>document.getElementById(i);
+  $("dvn").onclick=()=>devGo(curStage()+1);$("dvp").onclick=()=>devGo(curStage()-1);
+  $("dvj").onchange=e=>devGo(+e.target.value);$("dvr").onclick=()=>devGo(14);
+  $("dvt").onchange=e=>{TURBO=e.target.checked};$("dvx").onclick=devOff;
+  devSync();
+}
+function devOff(){
+  DEV=false;TURBO=false;SAMPLE=false;try{sessionStorage.removeItem("dev")}catch(e){}
+  clearInterval(timer);clearTimeout(timer);clearTimeout(NT);clearInterval(BT);cur=null;plan=null;log=[];score=0;SID="";
+  const d=document.getElementById("dev");if(d)d.remove();document.body.classList.remove("dev");devBtn();hs=0;hook();
+}
+function devInit(){try{DEV=sessionStorage.getItem("dev")==="1"}catch(e){}DEV?devOn():devBtn()}
+document.addEventListener("keydown",e=>{
+  if(!DEV||e.ctrlKey||e.metaKey||e.altKey||e.target.matches("input[type=text],input[type=number],input[type=password],textarea,select"))return;
+  if(e.key==="n"||e.key==="N")devGo(curStage()+1);else if(e.key==="p"||e.key==="P")devGo(curStage()-1);
+});
+document.addEventListener("keydown",e=>{
+  if(e.code==="Space"&&cur&&!cur.done&&document.getElementById("take")){e.preventDefault();end(false)}
+});
+document.addEventListener("keyup",e=>{
+  if(e.code!=="Space"||Date.now()<GO_AT)return;
+  if(document.getElementById("go")){e.preventDefault();startRound();return}
+  if(document.getElementById("nx")&&slide===1){e.preventDefault();begin()}
+});
+hook();devInit();
+</script>
+</body>
+</html>
